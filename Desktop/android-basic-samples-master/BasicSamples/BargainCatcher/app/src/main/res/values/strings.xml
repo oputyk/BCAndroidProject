@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BargainCatcher</string>
+    <string name="saved_searching_start_position">searchingStartPosition</string>
+</resources>
