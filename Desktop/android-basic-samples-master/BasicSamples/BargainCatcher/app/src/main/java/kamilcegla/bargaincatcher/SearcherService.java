@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class NewArticleService extends Service {
+public class SearcherService extends Service {
 
     ArticleContainer articleContainer = new ArticleContainerClass();
 

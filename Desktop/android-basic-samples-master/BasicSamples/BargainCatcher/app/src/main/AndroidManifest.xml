@@ -19,7 +19,7 @@
         </activity>
 
         <service
-            android:name=".NewArticleService"
+            android:name=".SearcherService"
             android:enabled="true"
             android:exported="true" />
 
