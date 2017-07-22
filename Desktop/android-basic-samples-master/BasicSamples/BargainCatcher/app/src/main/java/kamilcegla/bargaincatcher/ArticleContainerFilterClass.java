@@ -5,6 +5,7 @@ import java.util.List;
 
 interface ArticleContainerFilter {
 	List<Article> getFilteredArticles(List<Article> articles);
+	void addArticleFilters(List<ArticleFilter> articles);
 	void addArticleFilter(ArticleFilter articleFilter);
 }
 
@@ -27,6 +28,13 @@ public class ArticleContainerFilterClass implements ArticleContainerFilter {
 		}
 		
 		return filteredArticles;
+	}
+
+	@Override
+	public void addArticleFilters(List<ArticleFilter> articleFilters) {
+		for(ArticleFilter articleFilter : articleFilters) {
+			this.articleFilters.add(articleFilter);
+		}
 	}
 
 	private boolean isArticleOk(Article article) {

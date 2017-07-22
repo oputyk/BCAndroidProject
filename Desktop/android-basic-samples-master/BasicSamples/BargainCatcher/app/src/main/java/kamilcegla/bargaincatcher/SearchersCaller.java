@@ -4,10 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-public class SearcherServiceScheduler extends BroadcastReceiver {
+public class SearchersCaller extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent serviceIntent = new Intent(context, SearcherService.class);
-        context.startService(serviceIntent);
+        
     }
 }
