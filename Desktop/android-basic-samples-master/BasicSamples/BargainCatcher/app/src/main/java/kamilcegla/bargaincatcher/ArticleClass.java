@@ -15,11 +15,14 @@ interface Article {
     void makeArticleFromElement(Element element) throws JSONException;
     double getMoney();
     int getBruttoMoney();
-    String getName();
+    String getModel();
+    String getMark();
+    String getType();
     String toString();
     int getYear();
     String getLink();
     boolean isBrutto();
+    String getName();
     String getCurrencyName();
     boolean getPromotion();
     boolean isOk();
@@ -30,7 +33,6 @@ interface Article {
 public class ArticleClass implements Article {
 
     private double money;
-    private String name;
     private int year;
     private String link;
     private String currencyName;
@@ -40,7 +42,10 @@ public class ArticleClass implements Article {
     private ArticleInsider articleInsider = null;
     
     private Element element;
-    
+    private String mark;
+    private String model;
+    private String type;
+
     @Override
     public String toString() {
         return "Nazwa: " + getName() + "\n"
@@ -51,6 +56,11 @@ public class ArticleClass implements Article {
         		+ "exchangeRatio: " + String.valueOf(exchangeRatio) + "\n"
         		+ "currencyName: " + currencyName + "\n"
         		+ "brutto: " + Boolean.toString(brutto) + "\n";
+    }
+
+    @Override
+    public String getName() {
+        return mark + " " + model;
     }
 
     @Override 
@@ -69,9 +79,7 @@ public class ArticleClass implements Article {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
+    public String getModel() { return model; }
 
     @Override
     public int getYear() {
@@ -99,7 +107,27 @@ public class ArticleClass implements Article {
     	return articleInsider;
     }
 
-	private void initializeArticleInsiderIfNecessary() throws Exception {
+    @Override
+    public String getMark() {
+        return mark;
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    private void getMarkAndTypeFromName(String name) {
+        mark = name.substring(0, name.indexOf(' '));
+        findFullMarkName();
+        model = name.substring(mark.length() + 1);
+    }
+
+    private void findFullMarkName() {
+
+    }
+
+    private void initializeArticleInsiderIfNecessary() throws Exception {
 		if(articleInsider == null) {
     		articleInsider = new ArticleInsiderClass();
     		articleInsider.makeArticleInsiderFromLink(link);
@@ -141,7 +169,8 @@ public class ArticleClass implements Article {
     @Override
     public void makeArticleFromElement(Element element) throws JSONException {
     	this.element = element;
-        parseNameFromElement();
+        parseTypeFromElement();
+        parseMarkAndTypeFromElement();
         parseMoneyFromElement();
         parseCurrencyFromElement();
         parseBruttoFromElement();
@@ -163,8 +192,13 @@ public class ArticleClass implements Article {
         }
     }
 
-    private void parseNameFromElement() {
-        name = element.getElementsByClass("offer-title__link").first().html();
+    private void parseMarkAndTypeFromElement() {
+        String name = element.getElementsByClass("offer-title__link").first().html();
+        getMarkAndTypeFromName(name);
+    }
+
+    private void parseTypeFromElement() {
+        type = element.getElementsByClass("category-choose").attr("title").toLowerCase();
     }
 
     private void parseMoneyFromElement() {
