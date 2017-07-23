@@ -13,8 +13,6 @@ interface ArticleContainer {
 	void update() throws Exception;
 	boolean isNewPromotedArticle();
 	boolean isNewNotPromotedArticle();
-	void save();
-	void load();
 }
 
 public class ArticleContainerClass implements ArticleContainer {
@@ -75,16 +73,6 @@ public class ArticleContainerClass implements ArticleContainer {
 	@Override
 	public boolean isNewNotPromotedArticle() {
 		return !lastNotPromotedArticles.equals(notPromotedArticles);
-	}
-
-	@Override
-	public void save() {
-
-	}
-
-	@Override
-	public void load() {
-
 	}
 
 	private List<Article> getNewArticles(List<Article> lastArticles, List<Article> articles) {

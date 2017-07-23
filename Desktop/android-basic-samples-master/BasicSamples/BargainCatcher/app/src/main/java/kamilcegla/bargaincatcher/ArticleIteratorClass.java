@@ -7,7 +7,7 @@ import org.json.JSONException;
 import java.io.IOException;
 
 interface ArticleIterator {
-	void setFirstPageByUrl(String url) throws IOException, JSONException;
+	void setFirstPageByUrlAndStartPosition(String url, int startPosition) throws IOException, JSONException;
 	void setPosition(int newPosition);
 	int getPosition();
 	boolean isArticle();
@@ -28,13 +28,19 @@ public class ArticleIteratorClass implements ArticleIterator {
 		int getArticleOnPagePosition();
 		String toString();
 		boolean isPageToReload();
+		void initStartAbsolutePosition(int startAbsolutePosition);
 	}
 	
 	private class ArticlePositionClass implements ArticlePosition {
 		private int pagePosition = 1; // First is 1 (not 0)
 		private int articleOnPagePosition = 0;
 		private boolean pageNumberWasChanged = false;
-		
+
+		public void initStartAbsolutePosition(int startAbsolutePosition) {
+			setAbsolutePosition(startAbsolutePosition);
+			pageNumberWasChanged = false;
+		}
+
 		public void setAbsolutePosition(int absolutePosition) {
 			int newPagePosition = absolutePosition / 32 + 1;
 			if(pagePosition != newPagePosition) {
@@ -103,7 +109,8 @@ public class ArticleIteratorClass implements ArticleIterator {
 			return pageNumberWasChanged;
 		}
 	}
-	
+
+
 	String baseUrl = new String();
 	PageArticleContainer pageArticleContainer = new PageArticleContainerClass();
 	ArticlePosition articlePosition = new ArticlePositionClass();
@@ -115,13 +122,14 @@ public class ArticleIteratorClass implements ArticleIterator {
 	}
 	
 	@Override
-	public void setFirstPageByUrl(String baseUrl) throws IOException, JSONException {
+	public void setFirstPageByUrlAndStartPosition(String baseUrl, int startPosition) throws IOException, JSONException {
 		this.baseUrl = baseUrl;
-		initializeFirstPage();
+		initializeFirstPage(startPosition);
 	}
 	
-	private void initializeFirstPage() throws JSONException {
-		pageArticleContainer.loadPageByUrl(baseUrl);
+	private void initializeFirstPage(int startPosition) throws JSONException {
+        articlePosition.initStartAbsolutePosition(startPosition);
+		pageArticleContainer.loadPageByUrl(getUrlOfNthPage(startPosition));
 	}
 	
 	@Override

@@ -12,6 +12,8 @@ interface PromotionBorderFinder {
 	List<Article> getPromotedArticles();
 	void setUrl(String url) throws IOException, JSONException;
 	ArticleIterator getFirstNotPromotedArticleIterator();
+	void setStartSearchPosition(int startSearchPosition);
+	int getStartSearchPosition();
 }
 
 public class PromotionBorderFinderClass implements PromotionBorderFinder {
@@ -24,6 +26,7 @@ public class PromotionBorderFinderClass implements PromotionBorderFinder {
 	int startSearchPosition = 0;
 	boolean isFinishedFirstChecking;
 	int startSearchPositionStep = 32;
+	boolean initialized = false;
 
 	@Override
 	public List<Article> getPromotedArticles() {
@@ -33,9 +36,17 @@ public class PromotionBorderFinderClass implements PromotionBorderFinder {
 	@Override
 	public void setUrl(String url) throws IOException, JSONException {
 		this.url = url;
-		articleIterator.setFirstPageByUrl(url);
 	}
-	
+
+	public void setStartSearchPosition(int startSearchPosition) {
+		this.startSearchPosition = startSearchPosition;
+	}
+
+	@Override
+	public int getStartSearchPosition() {
+		return startSearchPosition;
+	}
+
 	@Override
 	public ArticleIterator getFirstNotPromotedArticleIterator() {
 		return articleIterator;
@@ -43,11 +54,13 @@ public class PromotionBorderFinderClass implements PromotionBorderFinder {
 	
 	@Override
 	public ArticleIterator searchFirstNotPromotedArticleIterator() throws Exception {
+		if(!initialized) {
+			articleIterator.setFirstPageByUrlAndStartPosition(url, startSearchPosition);
+		}
 		prepareForSearch();
 		if(!checkFirstTwoArticlesAndIsFinished()) {
 			checkNextArticles();
 		}
-		computeStartSearchPosition();
 		
 		return articleIterator;
 	}
@@ -145,14 +158,6 @@ public class PromotionBorderFinderClass implements PromotionBorderFinder {
 		promotedArticles.add(currentArticle);
 		lastArticle = currentArticle;
 		articleIterator.goToNext();
-	}
-	
-	private void computeStartSearchPosition() {
-		startSearchPosition = articleIterator.getPosition();
-		if(startSearchPosition < startSearchPositionStep)
-			startSearchPosition = 0;
-		else
-			startSearchPosition -= startSearchPositionStep;
 	}
 
 	private boolean isCurrentArticleNewerThanLastArticle(Article currentArticle, Article lastArticle) throws Exception {
