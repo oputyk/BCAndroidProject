@@ -12,18 +12,17 @@ import org.jsoup.select.Elements;
 
 interface PageArticleContainer {
     void loadPageByUrl(String url) throws JSONException;
-
     String toString();
-
     List<Article> getArticles();
-
     boolean isFoundPage();
+    int getCountOfAllArticles();
 }
 
 public class PageArticleContainerClass implements PageArticleContainer {
     private List<Article> articles = new ArrayList<Article>();
     private Document document;
     private boolean foundPage = true;
+    private int countOfAllArticles;
 
     @Override
     public String toString() {
@@ -47,9 +46,23 @@ public class PageArticleContainerClass implements PageArticleContainer {
     }
 
     @Override
+    public int getCountOfAllArticles() {
+        return countOfAllArticles;
+    }
+
+    @Override
     public void loadPageByUrl(String url) throws JSONException {
         getDocument(url);
+        parseCountOfAllArticles();
         loadArticles();
+    }
+
+    private void parseCountOfAllArticles() {
+        String countOfAllArticlesString = document.getElementsByClass("fleft tab selected").first().getElementsByClass("counter").first().html();
+        countOfAllArticlesString = countOfAllArticlesString.replace(" ", "");
+        countOfAllArticlesString = countOfAllArticlesString.replace("(", "");
+        countOfAllArticlesString = countOfAllArticlesString.replace(")", "");
+        countOfAllArticles = Integer.valueOf(countOfAllArticlesString);
     }
 
     private void getDocument(String url) {

@@ -5,28 +5,10 @@ package kamilcegla.bargaincatcher;
  */
 
 public class StartPositionAlgorithm {
-    int lastStartPosition;
-    int countOfArticles;
+    SearcherCache searcherCache = new SearcherCache();
 
-    public StartPositionAlgorithm(int lastStartPosition, int countOfArticles) {
-        this.lastStartPosition = lastStartPosition;
-        this.countOfArticles = countOfArticles;
-    }
-
-    public int getLastStartPosition() {
-        return lastStartPosition;
-    }
-
-    public void setLastStartPosition(int lastStartPosition) {
-        this.lastStartPosition = lastStartPosition;
-    }
-
-    public int getCountOfArticles() {
-        return countOfArticles;
-    }
-
-    public void setCountOfArticles(int countOfArticles) {
-        this.countOfArticles = countOfArticles;
+    public StartPositionAlgorithm(SearcherCache searcherCache) {
+        this.searcherCache = searcherCache;
     }
 
     public int computeStartPosition() {

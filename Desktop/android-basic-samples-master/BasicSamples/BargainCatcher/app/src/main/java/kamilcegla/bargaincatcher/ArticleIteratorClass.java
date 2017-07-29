@@ -10,6 +10,7 @@ interface ArticleIterator {
 	void setFirstPageByUrlAndStartPosition(String url, int startPosition) throws IOException, JSONException;
 	void setPosition(int newPosition);
 	int getPosition();
+    int getCountOfAllArticles();
 	boolean isArticle();
 	void goToNext();
 	void goToPrevious();
@@ -17,8 +18,10 @@ interface ArticleIterator {
 }
 
 public class ArticleIteratorClass implements ArticleIterator {
-	
-	interface ArticlePosition {
+
+    private int countOfAllArticles;
+
+    interface ArticlePosition {
 		void setAbsolutePosition(int absolutePosition);
 		int getAbsolutePosition();
 		void setPosition(int pagePosition, int articleOnPagePosition);
@@ -130,6 +133,7 @@ public class ArticleIteratorClass implements ArticleIterator {
 	private void initializeFirstPage(int startPosition) throws JSONException {
         articlePosition.initStartAbsolutePosition(startPosition);
 		pageArticleContainer.loadPageByUrl(getUrlOfNthPage(startPosition));
+        countOfAllArticles = pageArticleContainer.getCountOfAllArticles();
 	}
 	
 	@Override
@@ -143,8 +147,12 @@ public class ArticleIteratorClass implements ArticleIterator {
 		return articlePosition.getAbsolutePosition();
 	}
 
-	
-	@Override
+    @Override
+    public int getCountOfAllArticles() {
+        return countOfAllArticles;
+    }
+
+    @Override
 	public boolean isArticle() {
 		return currentArticle != null;
 	}

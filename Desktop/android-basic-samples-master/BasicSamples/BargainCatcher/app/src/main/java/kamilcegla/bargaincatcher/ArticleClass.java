@@ -5,6 +5,7 @@ import org.jsoup.nodes.Element;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -18,6 +19,7 @@ interface Article {
     String getModel();
     String getMark();
     String getType();
+    int getSizeOfAllArticles();
     String toString();
     int getYear();
     String getLink();
@@ -124,7 +126,7 @@ public class ArticleClass implements Article {
     }
 
     private void findFullMarkName() {
-
+        List<String> markNames = ; // To use Android resources..
     }
 
     private void initializeArticleInsiderIfNecessary() throws Exception {
